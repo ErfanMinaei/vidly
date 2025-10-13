@@ -2,6 +2,7 @@ const Joi = require('joi');
 const mongoose = require('mongoose');
 Joi.objectId = require('joi-objectid')(Joi);
 
+// modeling:
 const Rental = mongoose.model('Rental', new mongoose.Schema({
   customer: { 
     type: new mongoose.Schema({
@@ -56,6 +57,7 @@ const Rental = mongoose.model('Rental', new mongoose.Schema({
   }
 }));
 
+//validate fuctions:
 function validateRental(rental) {
   const schema = Joi.object({
     customerId: Joi.objectId().required(),
