@@ -18,7 +18,7 @@ const usersSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-        maxlength: 10,
+        maxlength: 1024,
         minlength: 4
     },
 });
@@ -30,10 +30,8 @@ const User = mongoose.model('user', usersSchema);
 
 const baseUserSchema = Joi.object({
   name: Joi.string().min(3).max(50),
-  email: Joi.string()
-    .email({ tlds: { allow: ['com'] } }) // Ensures contains "@" and ends with ".com"
-    .min(15),
-  password: Joi.string().min(4).max(10)
+  email: Joi.string().email().min(5).max(255),
+  password: Joi.string().min(4).max(255)
 });
 
 function validateCreate(user) {
