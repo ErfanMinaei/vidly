@@ -1,3 +1,4 @@
+const config = require('config');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
@@ -21,7 +22,7 @@ router.post('/', async (req, res) => {
 
   const token = jwt.sign(
   { _id: user._id },
-  'jwtPrivateKey'
+  config.get('jwtPrivateKey')
   );
   
   res.send(token);
