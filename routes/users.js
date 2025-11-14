@@ -1,3 +1,4 @@
+const auth = require('../middleware/auth');
 const config = require('config');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
@@ -35,7 +36,7 @@ router.post('/', async (req, res) => {
 });
 
 // edit a user:
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', auth, async (req, res) => {
     const user = await User.findById(req.params.id);
     if (!user)
         return res.status(404).send('The user with the given ID was not found.');
@@ -54,14 +55,14 @@ router.patch('/:id', async (req, res) => {
 
 
 // delete a user:
-router.delete('/:id',async(req, res)=>{
+router.delete('/:id', auth, async(req, res)=>{
     const user = await User.findByIdAndDelete(req.params.id);
     if (!user) return res.status(404).send('The user with the given ID was not found.');
     res.send(_.pick(user, ['_id', 'name', 'email']));
 });
 
-// show the customer with the given ID:
-router.get('/:id', async (req, res)=>{
+// show the user with the given ID:
+router.get('/:id', auth, async (req, res)=>{
     const user = await User.findById(req.params.id);
     if (!user) return res.status(404).send('The user with the given ID was not found.');
     res.send(_.pick(user, ['_id', 'name', 'email']));
