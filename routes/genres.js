@@ -8,8 +8,13 @@ const router = express.Router();
 
 // show all genres:
 router.get('/', async (req, res) => {
-  const genres = await Genre.find();
-  res.send(genres);
+  try{
+    const genres = await Genre.find();
+    res.send(genres);
+  }
+  catch(ex){
+    res.status(500).send('Something faild.');
+  };
 });
 
 // add a genre:
