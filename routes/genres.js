@@ -1,16 +1,15 @@
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
-const asyncMidleware = require('../middleware/async');
 const express = require('express');
 const mongoose = require('mongoose');
 const { validate, Genre } = require('../models/genre');
 const router = express.Router();
 
 // show all genres:
-router.get('/', asyncMidleware(async (req, res) => {
+router.get('/', async (req, res) => {
     const genres = await Genre.find();
     res.send(genres);
-}));
+});
 
 // add a genre:
 router.post('/', auth, async (req, res) => {
