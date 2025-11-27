@@ -15,21 +15,38 @@ const auth = require('./routes/auth');
 const express = require('express');
 const app = express();
 
-process.on('uncaughtException', (ex)=>{
-  console.log('-WE GOT AN uncaught Exception!');
-  winston.error(ex);
+//handle uncaughtException and unhandledRejection and log the messages on file and mongodb
+winston.exceptions.handle(
+  new winston.transports.File({ filename: 'uncaughtException.log' }),
+  new winston.transports.MongoDB({
+    db: 'mongodb://localhost/vidly',
+    level: 'error'
+  })
+);
+
+//convert unhandledRejection to a uncaughtException to let winston handle it
+process.on("unhandledRejection", (ex) => {
+  throw ex;
 });
 
-winston.add(winston.transport.File, {
-  fileName: 'logfile.log',
+//to log errors in file named logfile
+winston.add(new winston.transports.File({
+  filename: 'logfile.log',
   level: 'error'
-});
+}));
 
-winston.add(winston.transport.Mongodb, {
+//to log errors in mongodb
+winston.add(new winston.transports.MongoDB({
   db: 'mongodb://localhost/vidly',
-  level: 'error'
-});
+  level: 'error',
+}));
 
+// Test error AFTER startup
+setTimeout(() => {
+  throw new Error('Test error after startup');
+}, 1000);
+
+// cheking the privet key is set or not 
 if(!config.get('jwtPrivateKey')){
   console.error('FATAL ERROR: jwtPrivateKey is not defined');
   process.exit(1);
